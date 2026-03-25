@@ -13,7 +13,6 @@ export async function cleanDatabase() {
   ])
 }
 
-// Функция для создания тестовых данных
 export async function createTestData() {
   const user = await prisma.user.create({
     data: {

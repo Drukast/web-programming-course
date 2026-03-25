@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { SessionService } from './sessionService.js'
 
-// Мокаем весь модуль @prisma/client
 vi.mock('@prisma/client', () => {
   const mockTx = {
     session: { findUnique: vi.fn() },

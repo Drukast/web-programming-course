@@ -1,4 +1,3 @@
-import { Hono } from 'hono'
 import app from '../../src/index.js'
 
 export function createTestApp() {

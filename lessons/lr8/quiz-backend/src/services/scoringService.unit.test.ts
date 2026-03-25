@@ -93,11 +93,5 @@ describe('scoringService unit tests', () => {
       expect(() => scoringService.scoreQuestion('unknown', null, null))
         .toThrow('Неподдерживаемый тип вопроса: unknown')
     })
-
-    it('выбрасывает ошибку для multiple-select с неправильными типами', () => {
-      // В текущей реализации эта ошибка не выбрасывается, просто пропускаем
-      expect(() => scoringService.scoreQuestion('multiple-select', 'not-array', ['a']))
-        .not.toThrow()
-    })
   })
 })

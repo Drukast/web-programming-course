@@ -4,7 +4,6 @@ import { answerSchema, startSessionSchema } from './validation.js'
 describe('validation schemas', () => {
   describe('startSessionSchema', () => {
     it('валидный userId', () => {
-      // Реальный cuid формат: начинается с c, 25 символов
       const result = startSessionSchema.safeParse({ userId: 'cm6s5jq2k0000abc12345678' })
       expect(result.success).toBe(true)
     })
