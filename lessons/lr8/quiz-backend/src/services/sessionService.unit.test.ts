@@ -1,6 +1,24 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { SessionService } from './sessionService.js'
 
+// Мокаем весь модуль @prisma/client
+vi.mock('@prisma/client', () => {
+  const mockTx = {
+    session: { findUnique: vi.fn() },
+    question: { findUnique: vi.fn() },
+    answer: { findUnique: vi.fn(), create: vi.fn() }
+  }
+  
+  return {
+    PrismaClient: vi.fn(() => ({
+      $transaction: vi.fn(async (callback) => callback(mockTx)),
+      session: mockTx.session,
+      question: mockTx.question,
+      answer: mockTx.answer
+    }))
+  }
+})
+
 // Мокаем scoringService
 vi.mock('./scoringService', () => ({
   scoringService: {
@@ -8,46 +26,29 @@ vi.mock('./scoringService', () => ({
   }
 }))
 
-describe('SessionService unit tests', () => {
+describe('SessionService', () => {
   let service: SessionService
-  let mockTx: any
 
   beforeEach(() => {
-    vi.resetModules()
+    vi.clearAllMocks()
     service = new SessionService()
-    
-    mockTx = {
-      session: {
-        findUnique: vi.fn(),
-        update: vi.fn()
-      },
-      question: {
-        findUnique: vi.fn()
-      },
-      answer: {
-        findUnique: vi.fn(),
-        create: vi.fn()
-      }
-    }
   })
 
   describe('submitAnswer', () => {
-    it('должен выбросить ошибку если сессия не найдена', async () => {
-      mockTx.session.findUnique.mockResolvedValue(null)
-      
-      // Подменяем prisma.$transaction
-      const originalPrisma = (service as any).prisma
-      if (originalPrisma) {
-        originalPrisma.$transaction = vi.fn().mockImplementation(async (callback) => {
-          return callback(mockTx)
-        })
-      }
-      
+    it('should throw error if session not found', async () => {
+      // Транзакция вернет null для сессии
       await expect(service.submitAnswer({
         sessionId: '123',
         questionId: '456',
         userAnswer: ['a']
       })).rejects.toThrow('Сессия не найдена')
+    })
+  })
+
+  describe('submitSession', () => {
+    it('should throw error if session not found', async () => {
+      await expect(service.submitSession('123'))
+        .rejects.toThrow('Сессия не найдена')
     })
   })
 })
