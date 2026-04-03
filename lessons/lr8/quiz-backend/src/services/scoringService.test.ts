@@ -1,4 +1,3 @@
-// src/services/scoringService.test.ts
 import { describe, it, expect } from 'vitest'
 import { scoringService } from './scoringService.js'
 

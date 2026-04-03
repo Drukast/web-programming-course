@@ -14,7 +14,7 @@ export const answerSchema = z.object({
   questionId: z.string().cuid('Некорректный формат questionId (должен быть cuid)'),
   userAnswer: z.union([
     z.array(z.string()), // для multiple-select
-    z.array(z.number()), // для essay (оценки)
+    z.array(z.number()), // для essay
     z.string(),
     z.number()
   ])
