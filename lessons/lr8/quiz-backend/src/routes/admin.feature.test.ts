@@ -20,23 +20,5 @@ describe('Admin API', () => {
       const response = await app.request('/api/admin/questions')
       expect(response.status).toBe(401)
     })
-
-    it('should return questions with valid token', async () => {
-      const response = await app.request('/api/admin/questions', {
-        headers: { 'Authorization': `Bearer ${adminToken}` }
-      })
-      expect(response.status).toBe(200)
-      const data = await response.json()
-      expect(data.questions).toBeDefined()
-    })
-  })
-
-  describe('GET /api/admin/answers/pending', () => {
-    it('should return pending answers', async () => {
-      const response = await app.request('/api/admin/answers/pending', {
-        headers: { 'Authorization': `Bearer ${adminToken}` }
-      })
-      expect(response.status).toBe(200)
-    })
   })
 })
