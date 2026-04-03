@@ -11,7 +11,7 @@ app.use('*', logger())
 app.use('*', cors())
 
 app.get('/', (c) => c.json({ message: 'Quiz API' }))
-
+app.get('/health', (c) => c.json({ status: 'ok' }))
 app.route('/api/auth', auth)
 app.route('/api/sessions', sessions)
 app.route('/api/admin', admin)
