@@ -72,6 +72,11 @@ async function apiDelete(todoId: number): Promise<void> {
 
 function registerServiceWorkerStarter() {
   // TODO(PWA-1): зарегистрируйте Service Worker.
+    if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('SW registered:', reg))
+      .catch(err => console.error('SW registration failed:', err));
+  }
 }
 
 export default function App() {
@@ -169,13 +174,26 @@ export default function App() {
   }, [refreshFromServer]);
 
   useEffect(() => {
-    // TODO(PWA-2): добавьте обработчики online/offline.
-    // window.addEventListener('online', ...)
-    // window.addEventListener('offline', ...)
-    // и обновляйте isOnline + message.
+  const handleOnline = () => {
+    setIsOnline(true);
+    setMessage('Соединение восстановлено');
+  };
+  
+  const handleOffline = () => {
+    setIsOnline(false);
+    setMessage('Нет соединения, работаем офлайн');
+  };
 
-    setIsOnline(navigator.onLine);
-  }, []);
+  window.addEventListener('online', handleOnline);
+  window.addEventListener('offline', handleOffline);
+  
+  setIsOnline(navigator.onLine);
+
+  return () => {
+    window.removeEventListener('online', handleOnline);
+    window.removeEventListener('offline', handleOffline);
+  };
+}, []);
 
   return (
     <main className="app">
